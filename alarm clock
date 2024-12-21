@@ -1,0 +1,67 @@
+import tkinter as tk
+from tkinter import *
+import datetime
+import time
+import winsound
+from threading import Thread
+
+# Create the main window
+root = tk.Tk()
+root.geometry("400x200")
+root.title("Alarm Clock")
+
+def threading():
+    # Start the alarm function in a new thread
+    t1 = Thread(target=alarm)
+    t1.start()
+
+def alarm():
+    while True:
+        # Get the set alarm time
+        set_alarm = f"{hour.get()}:{minute.get()}:{second.get()}"
+        # Wait for a second
+        time.sleep(1)
+        # Get the current time
+        current_time = datetime.datetime.now().strftime("%H:%M:%S")
+        print(f"Current Time: {current_time}, Alarm Time: {set_alarm}")
+        
+        # Check if the current time matches the set alarm time
+        if current_time == set_alarm:
+            print("It's time to wake up!")
+            # Play the alarm sound
+            winsound.PlaySound("sound.wav", winsound.SND_ASYNC)
+            break  # Exit the loop once the alarm is triggered
+
+# Create GUI elements
+Label(root, text="Alarm Clock", font=("Helvetica 20 bold"), fg="red").pack(pady=10)
+Label(root, text="Set Time", font=("Helvetica 15 bold")).pack()
+
+frame = Frame(root)
+frame.pack()
+
+# Hour dropdown menu
+hour = StringVar(root)
+hours = [f"{i:02}" for i in range(24)]  # 00 to 23
+hour.set(hours[0])
+hrs = OptionMenu(frame, hour, *hours)
+hrs.pack(side=tk.LEFT)
+
+# Minute dropdown menu
+minute = StringVar(root)
+minutes = [f"{i:02}" for i in range(60)]  # 00 to 59
+minute.set(minutes[0])
+mins = OptionMenu(frame, minute, *minutes)
+mins.pack(side=tk.LEFT)
+
+# Second dropdown menu
+second = StringVar(root)
+seconds = [f"{i:02}" for i in range(60)]  # 00 to 59
+second.set(seconds[0])
+secs = OptionMenu(frame, second, *seconds)
+secs.pack(side=tk.LEFT)
+
+# Set Alarm button
+Button(root, text="Set Alarm", font=("Helvetica 15"), command=threading).pack(pady=20)
+
+# Run the Tkinter event loop
+root.mainloop()
